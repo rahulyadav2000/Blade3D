@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public float Health = 100f;
+    public float Health = 50f;
     
     // Start is called before the first frame update
     void Start()

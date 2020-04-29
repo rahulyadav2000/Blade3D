@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Ladder
+  - Gem
+  - Item
+  - Go
+  - Fake
   layers:
   - Default
   - TransparentFX

@@ -4,53 +4,58 @@ using UnityEngine;
 using UnityEngine.AI;
 public class Guard : MonoBehaviour
 {
+   // public SphereCollider playerdetector;
     public Animator anim;
     public Player player;
     private NavMeshAgent navAgent;
-    public float Dis = 6f;
+    //public float Dis = 2f;
     public bool isRun;
     public Transform Destination;
+    public GameObject Enemy;
+    public float Range = 6f;
+    private bool isActive;
     // Start is called before the first frame update
     void Start()
     {
         navAgent = GetComponent<NavMeshAgent>();
     }
 
-    public void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            if (!isRun)
-            {
-                isRun = true;
-               // Debug.Log("Detected");
-                anim.SetBool("Run", true);
-            }
-        }       
-    }
+  
     // Update is called once per frame
     void Update()
     {
-        Dis = Vector3.Distance(player.transform.position, gameObject.transform.position);
-        if(isRun)
+        float Distance = Vector3.Distance(player.transform.position, gameObject.transform.position);
+        if(Distance <= Range)
         {
-            if(Dis > 1.76f )
+            Enemy.gameObject.GetComponent<EnemyPatrol>().enabled = false;
+            anim.SetBool("Walk", false);
+            anim.SetBool("Run", true);
+            navAgent.SetDestination(Destination.position);
+            
+            if(Distance <= navAgent.stoppingDistance)
             {
-                isRun = true;
-                anim.SetBool("Run", true);
-                navAgent.SetDestination(Destination.position);
-                anim.SetBool("Attack", false);
+                anim.SetBool("Attack", true);
+                FaceTarget();
             }
             else
             {
-                anim.SetBool("Attack", true);
+                anim.SetBool("Attack", false);
             }
         }
+        
     }
 
-    /*private void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, Dis);
-    }*/
+        Gizmos.DrawWireSphere(transform.position, Range);
+    }
+
+    private void FaceTarget()
+    {
+        Vector3 Dir = (player.transform.position - transform.position).normalized;
+        Quaternion Look = Quaternion.LookRotation(new Vector3(Dir.x, 0, Dir.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, Look, Time.deltaTime * 2f);
+    }
+
 }

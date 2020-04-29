@@ -20,8 +20,8 @@ public class GuardAttack : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Hitted");
-            collision.gameObject.GetComponent<PlayerHealth>().TakeDamage(20);
+           //Debug.Log("Hitted");
+            collision.gameObject.GetComponent<PlayerHealth>().TakeDamage(10);
         }
     }
 }

@@ -16,12 +16,12 @@ public class PlayerAttack : MonoBehaviour
         
     }
 
-    public void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            Debug.Log("Hit");
-            collision.gameObject.GetComponent<GuardHealth>().TakeDamage(15);
-        }
-    }
+     public void OnCollisionEnter(Collision collision)
+     {
+         if (collision.gameObject.tag =="Enemy")
+         {
+             Debug.Log("Hit");
+             collision.gameObject.GetComponent<GuardHealth>().TakeDamage(15);
+         }
+     }
 }
