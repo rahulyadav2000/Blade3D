@@ -89,7 +89,7 @@ public class Player : MonoBehaviour
 
         if (!isClimb)
         {
-            moveDirection.y -= 10f;
+            moveDirection.y -= 6f;
             controller.Move(moveDirection * speed * Time.deltaTime);
             var magnitude = new Vector2(controller.velocity.x, controller.velocity.z).magnitude;
             anim.SetFloat("Speed", magnitude);

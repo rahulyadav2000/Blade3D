@@ -17,12 +17,18 @@ public class GuardHealth : MonoBehaviour
     {
         if(Health <= 0)
         {
-            anim.SetBool("Death", true);
+            anim.SetBool("Dead", true);
+            Invoke("Death", 2.6f);
         }
     }
 
     public void TakeDamage(float damageAmount)
     {
         Health -= damageAmount;
+    }
+    
+    private void Death()
+    {
+        Destroy(gameObject);
     }
 }

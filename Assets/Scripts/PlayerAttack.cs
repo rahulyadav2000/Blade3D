@@ -20,7 +20,7 @@ public class PlayerAttack : MonoBehaviour
      {
          if (collision.gameObject.tag =="Enemy")
          {
-             Debug.Log("Hit");
+             //Debug.Log("Hit");
              collision.gameObject.GetComponent<GuardHealth>().TakeDamage(15);
          }
      }

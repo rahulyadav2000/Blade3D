@@ -8,12 +8,10 @@ public class Guard : MonoBehaviour
     public Animator anim;
     public Player player;
     private NavMeshAgent navAgent;
-    //public float Dis = 2f;
-    public bool isRun;
     public Transform Destination;
     public GameObject Enemy;
     public float Range = 6f;
-    private bool isActive;
+    private bool InRange;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,19 +25,35 @@ public class Guard : MonoBehaviour
         float Distance = Vector3.Distance(player.transform.position, gameObject.transform.position);
         if(Distance <= Range)
         {
+            InRange = true;
+            navAgent.ResetPath();
             Enemy.gameObject.GetComponent<EnemyPatrol>().enabled = false;
             anim.SetBool("Walk", false);
-            anim.SetBool("Run", true);
-            navAgent.SetDestination(Destination.position);
+        }
+        if(Distance > Range)
+        {
+            InRange = false;
+            Enemy.gameObject.GetComponent<EnemyPatrol>().enabled = true;
+            anim.SetBool("Walk", true);
+            anim.SetBool("Run", false);
+            navAgent.isStopped = true;
             
+        }
+
+        if(InRange)
+        {
             if(Distance <= navAgent.stoppingDistance)
             {
                 anim.SetBool("Attack", true);
-                FaceTarget();
+                anim.SetBool("Run", false);
             }
-            else
+
+            if(Distance > navAgent.stoppingDistance)
             {
                 anim.SetBool("Attack", false);
+                anim.SetBool("Run", true);
+                navAgent.SetDestination(Destination.position);
+                FaceTarget();
             }
         }
         
