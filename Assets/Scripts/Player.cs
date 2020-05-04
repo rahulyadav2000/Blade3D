@@ -4,6 +4,9 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using UnityEditor;
+
 public class Player : MonoBehaviour
 {
     public Text CollectText;
@@ -20,30 +23,44 @@ public class Player : MonoBehaviour
     public GameObject Gem;
     public GameObject FakeGem;
     private bool IsHit= false;
-    private Eatables food;
-    private FirstAid firstAid;
     public GameObject GemCo;
     public Text GameOver;
     private bool IsWrong;
-
+    public Image Bar;
+    public GameObject Particle;
+    public GameObject Sparkling;
+    private AudioSource audio;
+    public AudioClip Chime;
+    public AudioClip robin;
+    public AudioClip wronggem;
+    public AudioClip sword;
+    private Eatables food;
+    private FirstAid firstaid;
     private void Awake()
     {
+        Sparkling.SetActive(false);
+        Particle.SetActive(false);
         controller = GetComponent<CharacterController>();
-        food = GetComponent<Eatables>();
-        firstAid = GetComponent<FirstAid>();
+       
     }
     void Start()
     {
-
+        audio = GetComponent<AudioSource>();
+        playerhealth = GetComponent<PlayerHealth>();
         CollectText.gameObject.SetActive(false);
         CollectText2.gameObject.SetActive(false);
         GameOver.gameObject.SetActive(false);
+        food = GetComponent<Eatables>();
+        firstaid = GetComponent<FirstAid>();
     }
 
 
     void Update()
     {
-        if(controller.isGrounded)
+
+
+
+        if (controller.isGrounded)
         {
             moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
             moveDirection = transform.TransformDirection(moveDirection);
@@ -54,7 +71,9 @@ public class Player : MonoBehaviour
                 anim.SetBool("Jump", true);
                 Invoke("Jump", 1f);
             }
+            
         }
+
 
         if (Input.GetKeyUp(KeyCode.Space))
         {
@@ -99,13 +118,14 @@ public class Player : MonoBehaviour
             transform.Translate(Vector3.up * 1.02f * Time.deltaTime);
         }
 
-       
-        
+
+
 
         if (Input.GetMouseButtonDown(0))
         {
-            anim.SetBool("Slash",true);
+            anim.SetBool("Slash",true);            
             Invoke("Slash", 1.4f);
+            audio.PlayOneShot(sword);
         }
        
         if(Input.GetMouseButtonDown(1))
@@ -132,6 +152,8 @@ public class Player : MonoBehaviour
                 Destroy(Gem);
                 GameOver.gameObject.SetActive(true);
                 GemCo.GetComponent<Exit>().GemCollected = true;
+                Sparkling.SetActive(true);
+                audio.PlayOneShot(Chime);
             }
         }
 
@@ -140,24 +162,37 @@ public class Player : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.G))
             {
                 Destroy(FakeGem);
-                Invoke("GameEnd", 3f);
+                Invoke("GameEnd", 6f);
+                Particle.SetActive(true);
+                anim.SetBool("Death", true);
+                audio.PlayOneShot(wronggem);
             }
         }
 
-        if (IsHit)
+       /* if (IsHit)
         {
             if(Input.GetKeyDown(KeyCode.E))
             {
                 playerhealth.IncreaseHealth(food.Health);
                 playerhealth.IncreaseHealth(firstAid.Health);
+
+                Destroy(gameObject);
             }
+        }*/
+
+        Bar.fillAmount = playerhealth.Health / 100;
+        if(playerhealth.Health == 0f)
+        {
+            anim.SetBool("Death", true);
+            Invoke("GameEnd", 3f);
+            audio.PlayOneShot(robin);
         }
     }
 
     private void GameEnd()
     {
-          //  SceneManager.LoadScene("");
-            Debug.Log("New Scene Opeing....");     
+         SceneManager.LoadScene("EndScene");
+         //Debug.Log("New Scene Opeing....");     
     }
     private void Jump()
     {
@@ -178,16 +213,6 @@ public class Player : MonoBehaviour
         anim.SetBool("Run", false);
     }
 
-     /*private void OnControllerColliderHit(ControllerColliderHit hit)
-     {
-        if(food && firstAid && Input.GetKeyDown(KeyCode.E))
-        {
-            playerhealth.IncreaseHealth(food.Health);
-            playerhealth.IncreaseHealth(firstAid.Health);
-
-            Destroy(gameObject);
-        }
-     }*/
 
     private void OnTriggerEnter(Collider other)
     {
@@ -201,14 +226,6 @@ public class Player : MonoBehaviour
         {
             CollectText2.gameObject.SetActive(true);
             IsWrong = true;
-        }
-
-        if (other.gameObject.CompareTag("Item"))
-        {
-            if(!food==null && !firstAid==null)
-            {
-                IsHit = true;
-            }
         }
     }
 
@@ -225,13 +242,16 @@ public class Player : MonoBehaviour
             CollectText2.gameObject.SetActive(false);
             IsWrong = false;
         }
+    }
 
-        if (other.gameObject.CompareTag("Item"))
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+      
+        if(Input.GetKeyDown(KeyCode.E) && food && firstaid)
         {
-            if (food && firstAid)
-            {
-                IsHit = false;
-            }
+            Debug.Log("Collided");
+            playerhealth.IncreaseHealth(food.Health);
+            playerhealth.IncreaseHealth(firstaid.Health);
         }
     }
 }

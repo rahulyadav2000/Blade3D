@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class EnemyPatrol : MonoBehaviour
@@ -24,7 +23,7 @@ public class EnemyPatrol : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 DirectionToWP = TargetWP.position - transform.position;
+        Vector3 DirectionToWP = (TargetWP.position - transform.position).normalized;
         Quaternion RotationtoWP = Quaternion.LookRotation(DirectionToWP);
 
         transform.rotation = Quaternion.Slerp(transform.rotation, RotationtoWP, RotateSpeed * Time.deltaTime);

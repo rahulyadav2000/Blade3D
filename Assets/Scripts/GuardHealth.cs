@@ -6,10 +6,12 @@ public class GuardHealth : MonoBehaviour
 {
     public float Health = 100f;
     public Animator anim;
+    private AudioSource audio;
+    public AudioClip die;
     // Start is called before the first frame update
     void Start()
     {
-        
+        audio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -17,6 +19,7 @@ public class GuardHealth : MonoBehaviour
     {
         if(Health <= 0)
         {
+            audio.PlayOneShot(die);
             anim.SetBool("Dead", true);
             Invoke("Death", 2.6f);
         }
