@@ -12,13 +12,10 @@ public class King : MonoBehaviour
     public GameObject Enemy;
     public float Range = 6f;
     private bool InRange;
-    private AudioSource audio;
-    public AudioClip attack;
     // Start is called before the first frame update
     void Start()
     {
         navAgent = GetComponent<NavMeshAgent>();
-        audio = GetComponent<AudioSource>();
     }
 
 
@@ -48,7 +45,6 @@ public class King : MonoBehaviour
                 anim.SetBool("Attack", true);
                 anim.SetBool("Run", false);
                 anim.SetBool("Idle", false);
-                audio.PlayOneShot(attack);
             }
 
             if (Distance > navAgent.stoppingDistance)

@@ -12,13 +12,10 @@ public class Guard2 : MonoBehaviour
     public GameObject Enemy;
     public float Range = 6f;
     private bool InRange;
-    private AudioSource audio;
-    public AudioClip attack;
     // Start is called before the first frame update
     void Start()
     {
         navAgent = GetComponent<NavMeshAgent>();
-        audio = GetComponent<AudioSource>();
     }
 
 
@@ -44,7 +41,6 @@ public class Guard2 : MonoBehaviour
             if (Distance <= navAgent.stoppingDistance)
             {
                 anim.SetBool("Attack", true);
-                audio.PlayOneShot(attack);
 
                 anim.SetBool("Run", false);
             }

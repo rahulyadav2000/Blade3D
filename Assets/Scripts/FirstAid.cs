@@ -4,16 +4,15 @@ using UnityEngine;
 
 public class FirstAid : MonoBehaviour
 {
-    public float Health = 100f;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public float health = 100f;
 
-    // Update is called once per frame
-    void Update()
+    private void OnCollisionEnter(Collision collision)
     {
-        
+        if(collision.gameObject.CompareTag("Player"))
+        {
+            collision.gameObject.GetComponent<PlayerHealth>().IncreaseHealth(100);
+            Destroy(gameObject);
+            Debug.Log("collided");
+        }
     }
 }

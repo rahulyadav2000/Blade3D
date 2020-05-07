@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class Eatables : MonoBehaviour
 {
-    public float Health = 15f;
-    // Start is called before the first frame update
-    void Start()
+    public float health = 15f;
+
+    private void OnCollisionEnter(Collision collision)
     {
-        
+        if (collision.gameObject.CompareTag("Player"))
+        {
+
+            collision.gameObject.GetComponent<PlayerHealth>().IncreaseHealth(15);
+            Destroy(gameObject);
+
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

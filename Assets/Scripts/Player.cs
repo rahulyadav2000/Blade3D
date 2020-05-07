@@ -34,8 +34,6 @@ public class Player : MonoBehaviour
     public AudioClip robin;
     public AudioClip wronggem;
     public AudioClip sword;
-    private Eatables food;
-    private FirstAid firstaid;
     private void Awake()
     {
         Sparkling.SetActive(false);
@@ -50,8 +48,6 @@ public class Player : MonoBehaviour
         CollectText.gameObject.SetActive(false);
         CollectText2.gameObject.SetActive(false);
         GameOver.gameObject.SetActive(false);
-        food = GetComponent<Eatables>();
-        firstaid = GetComponent<FirstAid>();
     }
 
 
@@ -244,14 +240,15 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnControllerColliderHit(ControllerColliderHit hit)
+    /*private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-      
-        if(Input.GetKeyDown(KeyCode.E) && food && firstaid)
+        var food = hit.gameObject.GetComponent<Eatables>();
+        var firstaid = hit.gameObject.GetComponent<FirstAid>();
+        if(food && firstaid)
         {
             Debug.Log("Collided");
-            playerhealth.IncreaseHealth(food.Health);
-            playerhealth.IncreaseHealth(firstaid.Health);
+            playerhealth.IncreaseHealth(food.health);
+            playerhealth.IncreaseHealth(firstaid.health);
         }
-    }
+    }*/
 }
